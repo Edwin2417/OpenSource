@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Listado de Aulas/Laboratorios</title>
+</head>
+<body>
+    <h1>Listado de Aulas/Laboratorios</h1>
+    <a href="{% url 'agregar_aula' %}">Agregar Aula/Laboratorio</a>
+    <table>
+        <tr>
+            <th>Descripción</th>
+            <th>Tipo de Aula</th><!DOCTYPE html>
+<html>
+<head>
+    <title>Agregar Aula/Laboratorio</title>
+</head>
+<body>
+    <h1>Agregar Aula/Laboratorio</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Guardar</button>
+    </form>
+</body>
+</html>
+
+            <th>Edificio</th>
+            <th>Capacidad</th>
+            <th>Cupos Reservados</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+        {% for aula in aulas %}
+        <tr>
+            <td>{{ aula.descripcion }}</td>
+            <td>{{ aula.tipo_aula.descripcion }}</td>
+            <td>{{ aula.edificio.descripcion }}</td>
+            <td>{{ aula.capacidad }}</td>
+            <td>{{ aula.cupos_reservados }}</td>
+            <td>{{ aula.estado }}</td>
+            <td>
+                <a href="{% url 'editar_aula' aula.id %}">Editar</a>
+                <a href="{% url 'eliminar_aula' aula.id %}">Eliminar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

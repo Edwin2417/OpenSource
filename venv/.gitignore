@@ -1,0 +1,10 @@
+# Entorno virtual
+venv/
+
+# Archivos de base de datos locales
+*.sqlite3
+
+# Archivos de configuración del entorno
+.idea/
+*.pyc
+__pycache__/
