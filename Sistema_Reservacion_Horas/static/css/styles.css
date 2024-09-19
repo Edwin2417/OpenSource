@@ -1,0 +1,21 @@
+/* Sistema_Reservacion_Horas/static/css/styles.css */
+body {
+    background-color: #f8f9fa;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+.table th, .table td {
+    text-align: center;
+}
+
+.btn {
+    margin: 5px;
+}
+
+.custom-checkbox-margin {
+    margin-left: 50px; /* Ajusta el valor según lo que necesites */
+}
+
