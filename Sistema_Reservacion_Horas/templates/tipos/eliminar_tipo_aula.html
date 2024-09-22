@@ -1,0 +1,29 @@
+<!-- Prueba/templates/tipo_aula/eliminar_tipo_aula.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Tipo de Aula</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+</head>
+<body>
+<a href="{% url 'listar_tipo_aula' %}" class="btn btn-secondary mb-3" style="margin-left: 65px">
+    &#8592; Volver
+</a>
+<div class="container mt-5">
+    <h1 class="text-center text-danger" style="margin-top: -50px">Eliminar un Tipo de Aula</h1>
+    <p class="text-center">¿Estás seguro de que deseas eliminar "{{ tipo_aula.descripcion }}"?</p>
+    <form method="post" class="text-center">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+        <a href="{% url 'listar_tipo_aula' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
