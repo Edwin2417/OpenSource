@@ -4,6 +4,10 @@ from Sistema_Reservacion_Horas.forms.login_forms import LoginForm
 from Sistema_Reservacion_Horas.models.aulas_model import Usuario
 
 def login_view(request):
+    # Verifica si ya hay un usuario logueado
+    if request.session.get('usuario_id'):
+        return redirect('home')  # Redirige al home si ya está logueado
+
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -29,3 +33,7 @@ def login_view(request):
         form = LoginForm()
 
     return render(request, 'login.html', {'form': form})
+
+def logout_view(request):
+    request.session.flush()
+    return redirect('login')
