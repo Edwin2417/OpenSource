@@ -1,7 +1,17 @@
-# Sistema_Reservacion_Horas/views/home.py
 from django.shortcuts import render, redirect
+from Sistema_Reservacion_Horas.models.aulas_model import Usuario
+
 
 def home(request):
-    if not request.session.get('usuario_id'):
+    usuario_id = request.session.get('usuario_id')  # Obtiene el ID del usuario de la sesión
+    usuario = None
+
+    if not usuario_id:
         return redirect('login')  # Redirige al login si no hay sesión
-    return render(request, 'index.html')
+
+    try:
+        usuario = Usuario.objects.get(identificador=usuario_id)
+    except Usuario.DoesNotExist:
+        pass  # Manejo del caso si el usuario no se encuentra
+
+    return render(request, 'index.html', {'usuario': usuario})

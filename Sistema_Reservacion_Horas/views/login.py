@@ -11,14 +11,14 @@ def login_view(request):
             password = form.cleaned_data['password']
 
             try:
-                # Cambia 'Nombre' a 'nombre'
                 usuario = Usuario.objects.get(nombre=nombre)
 
-                # Aquí, verifica la contraseña
-                if usuario.password == password:  # Considera usar un método seguro para comparar contraseñas
-                    # Si se encuentra, guarda el ID del usuario en la sesión
+                # Verifica si el usuario está activo
+                if not usuario.estado:
+                    messages.error(request, 'El usuario está inactivo. Contacte al administrador.')
+                elif usuario.password == password:  # Usa un método seguro para comparar contraseñas
                     request.session['usuario_id'] = usuario.identificador
-                    return redirect('home')  # Redirige al home
+                    return redirect('home')
                 else:
                     messages.error(request, 'Contraseña incorrecta. Intente de nuevo.')
 

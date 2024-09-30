@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}Inicio{% endblock %}
 
 {% block content %}
@@ -49,6 +49,15 @@
         .logout-button:hover {
             background-color: #a71d2a; /* Color al pasar el ratón sobre el botón */
         }
+
+        .user-info {
+            position: fixed; /* Fija la posición */
+            bottom: 70px; /* Ubicación desde el fondo */
+            left: 55px; /* Ubicación desde la izquierda */
+            font-size: 1rem; /* Ajusta el tamaño de la fuente */
+            color: white; /* Color del texto */
+            z-index: 1000; /* Asegura que esté por encima de otros elementos */
+        }
     </style>
 
     <!-- Menú vertical -->
@@ -89,6 +98,15 @@
         <h1>Reservación de Horas de Laboratorio UNAPEC</h1>
         <p>Seleccione una opción del menú de la izquierda.</p>
     </div>
+
+    <!-- Nombre del usuario actual -->
+    <div class="user-info" >
+    {% if usuario %}
+        <img src="{% static 'images/user.png' %}" alt="User Icon" style="width: 20px; height: 20px; margin-right: 5px;">
+        {{ usuario.nombre }}
+    {% endif %}
+</div>
+
 
     <!-- Botón de cerrar sesión -->
     <button class="logout-button" onclick="window.location.href='{% url 'login' %}'">Cerrar sesión</button>

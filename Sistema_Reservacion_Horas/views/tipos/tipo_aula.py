@@ -4,7 +4,12 @@ from Sistema_Reservacion_Horas.forms.tipos_aulas_forms import TiposAulasForm
 
 # Vista para listar los tipos de aula
 def listar_tipo_aula(request):
-    tipos_aulas = TiposAulas.objects.all()
+    query = request.GET.get('q', '')  # Obtiene la consulta de búsqueda
+    if query:
+        tipos_aulas = TiposAulas.objects.filter(descripcion__icontains=query)  # Filtra aulas por descripción
+    else:
+        tipos_aulas = TiposAulas.objects.all()  # Obtiene todas las aulas si no hay consulta
+
     return render(request, 'tipos/listar_tipo_aula.html', {'tipos_aulas': tipos_aulas})
 
 # Vista para agregar un nuevo tipo de aula

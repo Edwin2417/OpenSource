@@ -4,7 +4,12 @@ from Sistema_Reservacion_Horas.forms.edificios_form import EdificiosForms
 
 # Vista para listar los tipos de aula
 def listar_edificio(request):
-    edificios = Edificios.objects.all()
+    query = request.GET.get('q', '')  # Obtiene la consulta de búsqueda
+    if query:
+        edificios = Edificios.objects.filter(descripcion__icontains=query)  # Filtra aulas por descripción
+    else:
+        edificios = Edificios.objects.all()  # Obtiene todas las aulas si no hay consulta
+
     return render(request, 'edificios/listar_edificios.html', {'edificios': edificios})
 
 def agregar_edificio(request):

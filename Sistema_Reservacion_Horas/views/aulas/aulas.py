@@ -4,7 +4,12 @@ from Sistema_Reservacion_Horas.forms.aulas_forms import AulasLaboratoriosForm
 
 # Vista para listar las aulas/laboratorios
 def listar_aulas(request):
-    aulas = AulasLaboratorios.objects.all()
+    query = request.GET.get('q', '')  # Obtiene la consulta de búsqueda
+    if query:
+        aulas = AulasLaboratorios.objects.filter(descripcion__icontains=query)  # Filtra aulas por descripción
+    else:
+        aulas = AulasLaboratorios.objects.all()  # Obtiene todas las aulas si no hay consulta
+
     return render(request, 'aulas/listar_aulas.html', {'aulas': aulas})
 
 # Vista para agregar una nueva aula/laboratorio

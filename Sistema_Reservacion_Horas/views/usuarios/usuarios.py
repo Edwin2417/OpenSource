@@ -4,7 +4,12 @@ from Sistema_Reservacion_Horas.models.aulas_model import Usuario
 from Sistema_Reservacion_Horas.forms.usuario_form import UsuarioForms
 
 def listar_usuario(request):
-    usuarios = Usuario.objects.all()
+    query = request.GET.get('q', '')  # Obtiene la consulta de búsqueda
+    if query:
+        usuarios = Usuario.objects.filter(nombre__icontains=query)  # Filtra usuarios por nombre
+    else:
+        usuarios = Usuario.objects.all()  # Obtiene todos los usuarios si no hay consulta
+
     return render(request, 'usuarios/listar_usuario.html', {'usuarios': usuarios})
 
 def agregar_usuario(request):

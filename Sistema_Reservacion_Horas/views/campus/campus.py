@@ -5,7 +5,12 @@ from Sistema_Reservacion_Horas.forms.campus_forms import CampusForms
 
 # Campus CRUD
 def listar_campus(request):
-    campus = Campus.objects.all()
+    query = request.GET.get('q', '')  # Obtiene la consulta de búsqueda
+    if query:
+        campus = Campus.objects.filter(descripcion__icontains=query)  # Filtra aulas por descripción
+    else:
+        campus = Campus.objects.all()  # Obtiene todas las aulas si no hay consulta
+
     return render(request, 'campus/listar_campus.html', {'campus': campus})
 
 def agregar_campus(request):

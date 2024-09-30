@@ -8,7 +8,7 @@ class UsuarioForms(forms.ModelForm):
         fields = ['nombre', 'password', 'cedula', 'no_carnet', 'tipo_usuario', 'estado']
         widgets = {
             'nombre': forms.TextInput(attrs={'class': 'form-control'}),
-            'password': forms.PasswordInput(attrs={'class': 'form-control'}),
+            'password': forms.PasswordInput(attrs={'class': 'form-control'}, render_value=True),
             'cedula': forms.TextInput(attrs={'class': 'form-control'}),
             'no_carnet': forms.TextInput(attrs={'class': 'form-control'}),
             'tipo_usuario': forms.Select(attrs={'class': 'form-control'}),
@@ -43,14 +43,16 @@ class UsuarioForms(forms.ModelForm):
             raise forms.ValidationError('El número de carnet no puede superar los 20 caracteres.')
         return no_carnet
 
+    def clean_password(self):
+        password = self.cleaned_data.get('password')
+        # Si estamos editando, permite la contraseña existente
+        if self.instance and self.instance.pk and not password:
+            return self.instance.password
+        return password
     def clean(self):
         cleaned_data = super().clean()
-        estado = cleaned_data.get('estado')
         tipo_usuario = cleaned_data.get('tipo_usuario')
 
-        # Validación adicional
-        if not estado:
-            raise forms.ValidationError('El estado debe ser seleccionado.')
 
         if not tipo_usuario:
             raise forms.ValidationError('Debe seleccionar un tipo de usuario.')
