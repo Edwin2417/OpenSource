@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Campus{% endblock %}
+
+{% block content %}
+<a href="{% url 'listar_campus' %}" class="btn btn-secondary mb-3" style="margin-left: 20px">
+    &#8592; Volver
+</a>
+<div class="container mt-5">
+    <h1 class="text-center" style="margin-top: -30px">Editar un Campus</h1>
+    <form method="post" class="needs-validation" novalidate>
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form.descripcion.label }}  <!-- Etiqueta para la descripción -->
+            {{ form.descripcion }}  <!-- Campo de entrada para la descripción -->
+            {% if form.descripcion.errors %}
+                <div class="text-danger">{{ form.descripcion.errors }}</div>  <!-- Muestra errores -->
+            {% endif %}
+        </div>
+        <div class="form-group">
+            {{ form.estado.label }}  <!-- Etiqueta para el estado -->
+            {{ form.estado }}  <!-- Campo de entrada para el estado -->
+            {% if form.estado.errors %}
+                <div class="text-danger">{{ form.estado.errors }}</div>  <!-- Muestra errores -->
+            {% endif %}
+        </div>
+        <button type="submit" class="btn btn-success">Guardar Cambios</button>
+    </form>
+</div>
+{% endblock %}

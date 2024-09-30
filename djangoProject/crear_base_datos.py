@@ -57,6 +57,7 @@ cursor.execute('''
 CREATE TABLE Usuarios (
     Identificador INTEGER PRIMARY KEY,
     Nombre VARCHAR(255) NOT NULL,
+    Password VARCHAR(255) NOT NULL,
     Cedula VARCHAR(15) NOT NULL UNIQUE,
     NoCarnet VARCHAR(20) NOT NULL UNIQUE,
     TipoUsuarioId INTEGER NOT NULL,

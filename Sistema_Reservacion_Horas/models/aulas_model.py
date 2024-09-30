@@ -32,3 +32,23 @@ class AulasLaboratorios(models.Model):
 
     def __str__(self):
         return self.descripcion
+
+class Usuario(models.Model):
+    identificador = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=255)
+    password = models.CharField(max_length=255)
+    cedula = models.CharField(max_length=15, unique=True)
+    no_carnet = models.CharField(max_length=20, unique=True)
+    tipo_usuario = models.ForeignKey('TiposUsuarios', on_delete=models.CASCADE)
+    estado = models.BooleanField()
+
+    def __str__(self):
+        return self.nombre
+
+class TiposUsuarios(models.Model):
+    identificador = models.AutoField(primary_key=True)
+    descripcion = models.CharField(max_length=80)
+    estado = models.BooleanField()
+
+    def __str__(self):
+        return self.descripcion

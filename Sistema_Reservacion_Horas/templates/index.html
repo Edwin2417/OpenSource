@@ -25,14 +25,29 @@
 
         /* Ajusta el margen del contenido principal */
         .content {
-            margin-left: 150px; /* Para alinear con el menú */
+            margin-left: 250px; /* Para alinear con el menú */
             padding: 20px;
             text-align: center;
             margin-top: 50px;
         }
 
-        /* Estilos responsivos */
+        /* Estilo para el botón de cerrar sesión */
+        .logout-button {
+            position: fixed; /* Fija la posición */
+            bottom: 20px; /* Ubicación desde el fondo */
+            left: 55px; /* Ubicación desde la izquierda */
+            padding: 10px 15px; /* Espaciado interno del botón */
+            background-color: #c82333; /* Color de fondo del botón */
+            color: white; /* Color del texto del botón */
+            border: none; /* Sin borde */
+            border-radius: 5px; /* Bordes redondeados */
+            cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+            text-align: center; /* Centra el texto del botón */
+            z-index: 1000; /* Asegura que esté por encima de otros elementos */
+        }
 
+        .logout-button:hover {
+            background-color: #a71d2a; /* Color al pasar el ratón sobre el botón */
         }
     </style>
 
@@ -40,10 +55,10 @@
     <nav class="vertical-nav">
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link" href="#">Gestión de Campus</a>
+                <a class="nav-link" href="{% url 'listar_campus' %}">Gestión de Campus</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Gestión de Edificios</a>
+                <a class="nav-link" href="{% url 'listar_edificios' %}">Gestión de Edificios</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'listar_tipo_aula' %}">Gestión de Tipos de Aulas</a>
@@ -52,7 +67,7 @@
                 <a class="nav-link" href="{% url 'listar_aulas' %}">Gestión de Aulas / Laboratorios</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Gestión de Usuarios</a>
+                <a class="nav-link" href="{% url 'listar_usuarios' %}">Gestión de Usuarios</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Gestión de Empleados</a>
@@ -62,6 +77,7 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Consulta por Criterio de Reservación</a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Reporte de Reservación</a>
             </li>
@@ -73,4 +89,7 @@
         <h1>Reservación de Horas de Laboratorio UNAPEC</h1>
         <p>Seleccione una opción del menú de la izquierda.</p>
     </div>
+
+    <!-- Botón de cerrar sesión -->
+    <button class="logout-button" onclick="window.location.href='{% url 'login' %}'">Cerrar sesión</button>
 {% endblock %}

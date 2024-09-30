@@ -1,0 +1,77 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de Sesión</title>
+    <!-- Favicon -->
+    <link rel="icon" href="{% static 'images/logo.ico' %}" type="image/x-icon">
+    <!-- Bootstrap -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Estilos adicionales -->
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa; /* Color de fondo más claro */
+        }
+        .login-container {
+            background-color: #ffffff; /* Color de fondo del formulario */
+            border-radius: 10px; /* Bordes redondeados */
+            padding: 30px; /* Espaciado interno */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); /* Sombra */
+        }
+        .login-title {
+            margin-bottom: 20px; /* Espacio debajo del título */
+        }
+        .alert {
+            margin-bottom: 20px; /* Espacio debajo de las alertas */
+        }
+        /* Estilo para la imagen del logo */
+        .logo-image {
+            max-width: 80%; /* Ajusta el ancho máximo de la imagen */
+            height: auto; /* Mantiene la proporción de la imagen */
+            margin-bottom: 20px; /* Espacio debajo de la imagen */
+        }
+    </style>
+</head>
+<body>
+    <div class="container" style="margin-top: 100px;">
+        <div class="row justify-content-center">
+            <div class="col-md-6 login-container">
+                <div class="text-center mb-4">
+                    <img src="{% static 'images/logo.png' %}" alt="Logo" class="logo-image" style="margin-bottom: -70px; margin-top: -70px">
+                </div>
+                {% if messages %}
+                    <div class="alert alert-danger">
+                        {% for message in messages %}
+                            {{ message }}<br>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <form method="POST" novalidate>
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{ form.nombre.label_tag }}
+                        {{ form.nombre }}
+                        {% if form.nombre.errors %}
+                            <div class="text-danger">{{ form.nombre.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        {{ form.password.label_tag }}
+                        {{ form.password }}
+                        {% if form.password.errors %}
+                            <div class="text-danger">{{ form.password.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Iniciar sesión</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Scripts de Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

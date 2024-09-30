@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Eliminar Edificio{% endblock %}
+
+{% block content %}
+<a href="{% url 'listar_edificios' %}" class="btn btn-secondary mb-3" style="margin-left: 20px">
+    &#8592; Volver
+</a>
+<div class="container mt-5">
+    <h1 class="text-center text-danger" style="margin-top: -30px">Eliminar un Edificio</h1>
+    <p class="text-center">¿Estás seguro de que deseas eliminar "{{ edificio.descripcion }}"?</p>
+    <form method="post" class="text-center">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+        <a href="{% url 'listar_edificios' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}
