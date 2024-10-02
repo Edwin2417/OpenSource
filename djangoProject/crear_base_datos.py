@@ -4,12 +4,21 @@ import sqlite3
 conn = sqlite3.connect('Sistema_Reservacion.sqlite')
 cursor = conn.cursor()
 
-# Crear las tablas
+# Crear la tabla de estados
+cursor.execute('''
+CREATE TABLE Estados (
+    EstadoID INTEGER PRIMARY KEY,
+    Descripcion VARCHAR(80) NOT NULL
+);
+''')
+
+# Crear las demás tablas con la referencia a Estados
 cursor.execute('''
 CREATE TABLE Campus (
     Identificador INTEGER PRIMARY KEY,
     Descripcion VARCHAR(255) NOT NULL,
-    Estado BOOLEAN NOT NULL
+    EstadoID INTEGER NOT NULL,
+    FOREIGN KEY (EstadoID) REFERENCES Estados(EstadoID)
 );
 ''')
 
@@ -18,8 +27,9 @@ CREATE TABLE Edificios (
     Identificador INTEGER PRIMARY KEY,
     Descripcion VARCHAR(255) NOT NULL,
     CampusId INTEGER NOT NULL,
-    Estado BOOLEAN NOT NULL,
-    FOREIGN KEY (CampusId) REFERENCES Campus(Identificador)
+    EstadoID INTEGER NOT NULL,
+    FOREIGN KEY (CampusId) REFERENCES Campus(Identificador),
+    FOREIGN KEY (EstadoID) REFERENCES Estados(EstadoID)
 );
 ''')
 
@@ -27,7 +37,8 @@ cursor.execute('''
 CREATE TABLE TiposAulas (
     Identificador INTEGER PRIMARY KEY,
     Descripcion VARCHAR(255) NOT NULL,
-    Estado BOOLEAN NOT NULL
+    EstadoID INTEGER NOT NULL,
+    FOREIGN KEY (EstadoID) REFERENCES Estados(EstadoID)
 );
 ''')
 
@@ -39,9 +50,10 @@ CREATE TABLE AulasLaboratorios (
     EdificioId INTEGER NOT NULL,
     Capacidad INTEGER NOT NULL,
     CuposReservados INTEGER NOT NULL,
-    Estado BIT NOT NULL,
+    EstadoID INTEGER NOT NULL,
     FOREIGN KEY (TipoAulaId) REFERENCES TiposAulas(Identificador),
-    FOREIGN KEY (EdificioId) REFERENCES Edificios(Identificador)
+    FOREIGN KEY (EdificioId) REFERENCES Edificios(Identificador),
+    FOREIGN KEY (EstadoID) REFERENCES Estados(EstadoID)
 );
 ''')
 
@@ -49,7 +61,8 @@ cursor.execute('''
 CREATE TABLE TiposUsuarios (
     Identificador INTEGER PRIMARY KEY,
     Descripcion VARCHAR(80) NOT NULL,
-    Estado BOOLEAN NOT NULL
+    EstadoID INTEGER NOT NULL,
+    FOREIGN KEY (EstadoID) REFERENCES Estados(EstadoID)
 );
 ''')
 
@@ -61,8 +74,9 @@ CREATE TABLE Usuarios (
     Cedula VARCHAR(15) NOT NULL UNIQUE,
     NoCarnet VARCHAR(20) NOT NULL UNIQUE,
     TipoUsuarioId INTEGER NOT NULL,
-    Estado BOOLEAN NOT NULL,
-    FOREIGN KEY (TipoUsuarioId) REFERENCES TiposUsuarios(Identificador)
+    EstadoID INTEGER NOT NULL,
+    FOREIGN KEY (TipoUsuarioId) REFERENCES TiposUsuarios(Identificador),
+    FOREIGN KEY (EstadoID) REFERENCES Estados(EstadoID)
 );
 ''')
 
@@ -70,7 +84,8 @@ cursor.execute('''
 CREATE TABLE Tandas (
     Identificador INTEGER PRIMARY KEY,
     Descripcion VARCHAR(80) NOT NULL,
-    Estado BOOLEAN NOT NULL
+    EstadoID INTEGER NOT NULL,
+    FOREIGN KEY (EstadoID) REFERENCES Estados(EstadoID)
 );
 ''')
 
@@ -81,8 +96,9 @@ CREATE TABLE Empleados (
     Cedula VARCHAR(15) NOT NULL UNIQUE,
     TandaId INTEGER NOT NULL,
     FechaIngreso DATE NOT NULL,
-    Estado BOOLEAN NOT NULL,
-    FOREIGN KEY (TandaId) REFERENCES Tandas(Identificador)
+    EstadoID INTEGER NOT NULL,
+    FOREIGN KEY (TandaId) REFERENCES Tandas(Identificador),
+    FOREIGN KEY (EstadoID) REFERENCES Estados(EstadoID)
 );
 ''')
 
@@ -95,10 +111,11 @@ CREATE TABLE ProcesoReservacionHoras (
     FechaReservacion DATE NOT NULL,
     CantidadHoras INTEGER NOT NULL,
     Comentario TEXT,
-    Estado BOOLEAN NOT NULL,
+    EstadoID INTEGER NOT NULL,
     FOREIGN KEY (EmpleadoId) REFERENCES Empleados(Identificador),
     FOREIGN KEY (AulaId) REFERENCES AulasLaboratorios(Identificador),
-    FOREIGN KEY (UsuarioId) REFERENCES Usuarios(Identificador)
+    FOREIGN KEY (UsuarioId) REFERENCES Usuarios(Identificador),
+    FOREIGN KEY (EstadoID) REFERENCES Estados(EstadoID)
 );
 ''')
 

@@ -1,6 +1,5 @@
 from django import forms
-from Sistema_Reservacion_Horas.models.aulas_model import Usuario  # Asegúrate de que la ruta sea correcta
-from Sistema_Reservacion_Horas.models.aulas_model import TiposUsuarios  # Asegúrate de que la ruta sea correcta
+from Sistema_Reservacion_Horas.models.aulas_model import Usuario, TiposUsuarios, Estado  # Asegúrate de que la ruta sea correcta
 
 class UsuarioForms(forms.ModelForm):
     class Meta:
@@ -12,12 +11,15 @@ class UsuarioForms(forms.ModelForm):
             'cedula': forms.TextInput(attrs={'class': 'form-control'}),
             'no_carnet': forms.TextInput(attrs={'class': 'form-control'}),
             'tipo_usuario': forms.Select(attrs={'class': 'form-control'}),
-            'estado': forms.CheckboxInput(attrs={'class': 'form-check-input custom-checkbox-margin'}),
+            'estado': forms.Select(attrs={'class': 'form-control'}),  # Cambiado a Select para el estado
         }
 
     def __init__(self, *args, **kwargs):
         super(UsuarioForms, self).__init__(*args, **kwargs)
-        self.fields['tipo_usuario'].queryset = TiposUsuarios.objects.all()  # Cargar todos los tipos de usuarios
+        # Cargar todos los tipos de usuarios
+        self.fields['tipo_usuario'].queryset = TiposUsuarios.objects.all()
+        # Cargar todos los estados disponibles
+        self.fields['estado'].queryset = Estado.objects.all()
 
     def clean_nombre(self):
         nombre = self.cleaned_data.get('nombre')
@@ -49,12 +51,15 @@ class UsuarioForms(forms.ModelForm):
         if self.instance and self.instance.pk and not password:
             return self.instance.password
         return password
+
     def clean(self):
         cleaned_data = super().clean()
         tipo_usuario = cleaned_data.get('tipo_usuario')
-
+        estado = cleaned_data.get('estado')
 
         if not tipo_usuario:
             raise forms.ValidationError('Debe seleccionar un tipo de usuario.')
+        if not estado:
+            raise forms.ValidationError('Debe seleccionar un estado válido.')
 
         return cleaned_data

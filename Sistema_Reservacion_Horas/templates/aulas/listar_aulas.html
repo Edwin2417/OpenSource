@@ -44,13 +44,7 @@
                     <td>{{ aula.edificio.descripcion }}</td>
                     <td>{{ aula.capacidad }}</td>
                     <td>{{ aula.cupos_reservados }}</td>
-                    <td>
-                        {% if aula.estado %}
-                            <span class="text-success">Disponible ✓</span>
-                        {% else %}
-                            <span class="text-danger">No Disponible X</span>
-                        {% endif %}
-                    </td>
+                    <td>{{ aula.estado.descripcion }}</td> <!-- Mostrar el estado directamente -->
                     <td>
                         <a href="{% url 'editar_aula' aula.id %}" class="btn btn-warning btn-sm">Editar</a>
                         <a href="{% url 'eliminar_aula' aula.id %}" class="btn btn-danger btn-sm">Eliminar</a>

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="Sistema_Reservacion" uuid="54379055-c034-4949-a1c7-a5c334c7075a">
+    <data-source source="LOCAL" name="Sistema_Reservacion" uuid="c1ef721b-f22f-46e7-a522-557cf8299353">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:C:\Users\eddm2\PycharmProjects\djangoProject\djangoProject\Sistema_Reservacion.sqlite</jdbc-url>
+      <jdbc-url>jdbc:sqlite:C:\Users\eddm2\PycharmProjects\djangoProject\Sistema_Reservacion.sqlite</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
       <libraries>
         <library>

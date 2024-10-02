@@ -1,5 +1,5 @@
 from django import forms
-from Sistema_Reservacion_Horas.models.aulas_model import AulasLaboratorios, TiposAulas, Edificios
+from Sistema_Reservacion_Horas.models.aulas_model import AulasLaboratorios, TiposAulas, Edificios, Estado
 
 
 class AulasLaboratoriosForm(forms.ModelForm):
@@ -12,17 +12,20 @@ class AulasLaboratoriosForm(forms.ModelForm):
             'edificio': forms.Select(attrs={'class': 'form-control'}),
             'capacidad': forms.NumberInput(attrs={'class': 'form-control'}),
             'cupos_reservados': forms.NumberInput(attrs={'class': 'form-control'}),
-            'estado': forms.CheckboxInput(attrs={'class': 'form-check-input custom-checkbox-margin'}),
+            'estado': forms.Select(attrs={'class': 'form-control'}),
         }
 
     def __init__(self, *args, **kwargs):
         super(AulasLaboratoriosForm, self).__init__(*args, **kwargs)
 
-        # Filtrar solo tipos de aula con estado True
-        self.fields['tipo_aula'].queryset = TiposAulas.objects.filter(estado=True)
+        # Filtrar solo tipos de aula con estado activo
+        self.fields['tipo_aula'].queryset = TiposAulas.objects.filter(estado__descripcion="Activo")
 
-        # Filtrar solo edificios con estado True
-        self.fields['edificio'].queryset = Edificios.objects.filter(estado=True)
+        # Filtrar solo edificios con estado activo
+        self.fields['edificio'].queryset = Edificios.objects.filter(estado__descripcion="Activo")
+
+        # Filtrar solo estados disponibles para selección
+        self.fields['estado'].queryset = Estado.objects.all()
 
     def clean_capacidad(self):
         capacidad = self.cleaned_data.get('capacidad')
@@ -47,17 +50,15 @@ class AulasLaboratoriosForm(forms.ModelForm):
 
         # Verificar si la capacidad y los cupos reservados están disponibles
         if capacidad is not None and cupos_reservados is not None:
-            # Validación de que los cupos reservados no superen la capacidad
-            if cupos_reservados > capacidad:
-                self.add_error('cupos_reservados', 'Los cupos reservados no pueden ser mayores que la capacidad.')
-
-            # Si los cupos reservados son iguales a la capacidad, desactivar y marcar estado como False
+            # Si los cupos reservados son iguales a la capacidad, asignar el estado "Inactivo"
             if cupos_reservados == capacidad:
-                cleaned_data['estado'] = False
+                estado_inactivo = Estado.objects.get(descripcion="Inactivo")
+                cleaned_data['estado'] = estado_inactivo
                 self.fields['estado'].widget.attrs['disabled'] = True
-            # Si los cupos reservados son menores que la capacidad, activar y marcar estado como True
-            else:
-                cleaned_data['estado'] = True
+            # Si los cupos reservados son menores a la capacidad, asignar el estado "Activo"
+            elif cupos_reservados < capacidad:
+                estado_activo = Estado.objects.get(descripcion="Activo")
+                cleaned_data['estado'] = estado_activo
                 self.fields['estado'].widget.attrs.pop('disabled', None)  # Eliminar el atributo disabled si está presente
 
         return cleaned_data

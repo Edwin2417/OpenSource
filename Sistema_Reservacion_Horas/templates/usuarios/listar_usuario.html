@@ -44,13 +44,7 @@
                 <td>{{ usuario.cedula }}</td>
                 <td>{{ usuario.no_carnet }}</td>
                 <td>{{ usuario.tipo_usuario }}</td>
-                <td>
-                    {% if usuario.estado %}
-                        <span class="text-success">Activo</span>
-                    {% else %}
-                        <span class="text-danger">Inactivo</span>
-                    {% endif %}
-                </td>
+                <td>{{ usuario.estado.descripcion }}</td>
                 <td>
                     <a href="{% url 'editar_usuario' usuario.identificador %}" class="btn btn-warning btn-sm">Editar</a>
                     <a href="{% url 'eliminar_usuario' usuario.identificador %}" class="btn btn-danger btn-sm">Eliminar</a>

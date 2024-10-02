@@ -12,7 +12,7 @@
 
         <div class="d-flex justify-content-between mb-3">
             <!-- Botón "Agregar un Aula/Laboratorio" alineado a la izquierda -->
-            <a href="{% url 'agregar_aula' %}" class="btn btn-primary">Agregar un Tipo de Aula</a>
+            <a href="{% url 'agregar_tipo_aula' %}" class="btn btn-primary">Agregar un Tipo de Aula</a>
 
             <!-- Formulario de búsqueda alineado a la derecha -->
             <form method="GET" class="flex-grow-1 ml-2" style="max-width: 300px; margin-top: 10px"> <!-- Ajusta el ancho del buscador -->
@@ -37,13 +37,7 @@
             {% for tipo_aula in tipos_aulas %}
             <tr>
                 <td>{{ tipo_aula.descripcion }}</td>
-                <td>
-                    {% if tipo_aula.estado %}
-                        <span class="text-success">Disponible ✓</span>
-                    {% else %}
-                        <span class="text-danger">No Disponible X</span>
-                    {% endif %}
-                </td>
+                <td>{{ tipo_aula.estado.descripcion }}</td>
                 <td>
                     <a href="{% url 'editar_tipo_aula' tipo_aula.id %}" class="btn btn-warning btn-sm">Editar</a>
                     <a href="{% url 'eliminar_tipo_aula' tipo_aula.id %}" class="btn btn-danger btn-sm">Eliminar</a>

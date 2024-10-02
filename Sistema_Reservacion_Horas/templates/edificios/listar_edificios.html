@@ -11,7 +11,7 @@
 
         <div class="d-flex justify-content-between mb-3">
             <!-- Botón "Agregar un Aula/Laboratorio" alineado a la izquierda -->
-            <a href="{% url 'agregar_aula' %}" class="btn btn-primary">Agregar un Edificio</a>
+            <a href="{% url 'agregar_edificio' %}" class="btn btn-primary">Agregar un Edificio</a>
 
             <!-- Formulario de búsqueda alineado a la derecha -->
             <form method="GET" class="flex-grow-1 ml-2" style="max-width: 300px; margin-top: 10px"> <!-- Ajusta el ancho del buscador -->
@@ -37,13 +37,7 @@
             <tr>
                 <td>{{ edificio.descripcion }}</td>
                 <td>{{ edificio.campus.descripcion }}</td>
-                <td>
-                    {% if edificio.estado %}
-                        <span class="text-success">Disponible ✓</span>
-                    {% else %}
-                        <span class="text-danger">No Disponible X</span>
-                    {% endif %}
-                </td>
+                <td>{{ edificio.estado.descripcion }}</td>
                 <td>
                     <a href="{% url 'editar_edificio' edificio.id %}" class="btn btn-warning btn-sm">Editar</a>
                     <a href="{% url 'eliminar_edificio' edificio.id %}" class="btn btn-danger btn-sm">Eliminar</a>
