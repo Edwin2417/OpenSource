@@ -1,7 +1,18 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from Sistema_Reservacion_Horas.models.aulas_model import TiposAulas
 from Sistema_Reservacion_Horas.forms.tipos_aulas_forms import TiposAulasForm
+from django.http import HttpResponseForbidden
 
+# Verificación de permisos
+def admin_required(view_func):
+    def wrapper(request, *args, **kwargs):
+        tipo_usuario = request.session.get('tipo_usuario')
+        if tipo_usuario != 'Administrador':
+            return HttpResponseForbidden("No tienes permiso para acceder a esta sección.")
+        return view_func(request, *args, **kwargs)
+    return wrapper
+
+@admin_required
 # Vista para listar los tipos de aula
 def listar_tipo_aula(request):
     query = request.GET.get('q', '')  # Obtiene la consulta de búsqueda
@@ -12,6 +23,8 @@ def listar_tipo_aula(request):
 
     return render(request, 'tipos/listar_tipo_aula.html', {'tipos_aulas': tipos_aulas})
 
+
+@admin_required
 # Vista para agregar un nuevo tipo de aula
 def agregar_tipo_aula(request):
     if request.method == 'POST':
@@ -24,6 +37,7 @@ def agregar_tipo_aula(request):
     return render(request, 'tipos/agregar_tipo_aula.html', {'form': form})
 
 
+@admin_required
 # Vista para editar un tipo de aula existente
 def editar_tipo_aula(request, pk):
     tipo_aula = get_object_or_404(TiposAulas, pk=pk)
@@ -37,6 +51,7 @@ def editar_tipo_aula(request, pk):
     return render(request, 'tipos/editar_tipo_aula.html', {'form': form, 'tipo_aula': tipo_aula})
 
 
+@admin_required
 # Vista para eliminar un tipo de aula
 def eliminar_tipo_aula(request, pk):
     tipo_aula = get_object_or_404(TiposAulas, pk=pk)

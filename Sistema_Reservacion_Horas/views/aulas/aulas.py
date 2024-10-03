@@ -1,7 +1,18 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from Sistema_Reservacion_Horas.models.aulas_model import AulasLaboratorios
 from Sistema_Reservacion_Horas.forms.aulas_forms import AulasLaboratoriosForm
+from django.http import HttpResponseForbidden
 
+# Verificación de permisos
+def admin_required(view_func):
+    def wrapper(request, *args, **kwargs):
+        tipo_usuario = request.session.get('tipo_usuario')
+        if tipo_usuario != 'Administrador':
+            return HttpResponseForbidden("No tienes permiso para acceder a esta sección.")
+        return view_func(request, *args, **kwargs)
+    return wrapper
+
+@admin_required
 # Vista para listar las aulas/laboratorios
 def listar_aulas(request):
     query = request.GET.get('q', '')  # Obtiene la consulta de búsqueda
@@ -12,6 +23,8 @@ def listar_aulas(request):
 
     return render(request, 'aulas/listar_aulas.html', {'aulas': aulas})
 
+
+@admin_required
 # Vista para agregar una nueva aula/laboratorio
 def agregar_aula(request):
     if request.method == 'POST':
@@ -23,6 +36,8 @@ def agregar_aula(request):
         form = AulasLaboratoriosForm()
     return render(request, 'aulas/agregar_aula.html', {'form': form})
 
+
+@admin_required
 # Vista para editar una aula/laboratorio existente
 def editar_aula(request, pk):
     aula = get_object_or_404(AulasLaboratorios, pk=pk)
@@ -35,6 +50,8 @@ def editar_aula(request, pk):
         form = AulasLaboratoriosForm(instance=aula)
     return render(request, 'aulas/editar_aula.html', {'form': form, 'aula': aula})
 
+
+@admin_required
 # Vista para eliminar una aula/laboratorio
 def eliminar_aula(request, pk):
     aula = get_object_or_404(AulasLaboratorios, pk=pk)

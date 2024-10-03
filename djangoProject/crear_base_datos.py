@@ -12,7 +12,7 @@ CREATE TABLE Estados (
 );
 ''')
 
-# Crear las demás tablas con la referencia a Estados
+# Crear la tabla Campus
 cursor.execute('''
 CREATE TABLE Campus (
     Identificador INTEGER PRIMARY KEY,
@@ -22,6 +22,7 @@ CREATE TABLE Campus (
 );
 ''')
 
+# Crear la tabla Edificios
 cursor.execute('''
 CREATE TABLE Edificios (
     Identificador INTEGER PRIMARY KEY,
@@ -33,6 +34,7 @@ CREATE TABLE Edificios (
 );
 ''')
 
+# Crear la tabla TiposAulas
 cursor.execute('''
 CREATE TABLE TiposAulas (
     Identificador INTEGER PRIMARY KEY,
@@ -42,6 +44,7 @@ CREATE TABLE TiposAulas (
 );
 ''')
 
+# Crear la tabla AulasLaboratorios
 cursor.execute('''
 CREATE TABLE AulasLaboratorios (
     Identificador INTEGER PRIMARY KEY,
@@ -57,6 +60,7 @@ CREATE TABLE AulasLaboratorios (
 );
 ''')
 
+# Crear la tabla TiposUsuarios
 cursor.execute('''
 CREATE TABLE TiposUsuarios (
     Identificador INTEGER PRIMARY KEY,
@@ -66,6 +70,7 @@ CREATE TABLE TiposUsuarios (
 );
 ''')
 
+# Crear la tabla Usuarios
 cursor.execute('''
 CREATE TABLE Usuarios (
     Identificador INTEGER PRIMARY KEY,
@@ -80,6 +85,7 @@ CREATE TABLE Usuarios (
 );
 ''')
 
+# Crear la tabla Tandas
 cursor.execute('''
 CREATE TABLE Tandas (
     Identificador INTEGER PRIMARY KEY,
@@ -89,6 +95,7 @@ CREATE TABLE Tandas (
 );
 ''')
 
+# Crear la tabla Empleados con el campo UsuarioID como clave foránea
 cursor.execute('''
 CREATE TABLE Empleados (
     Identificador INTEGER PRIMARY KEY,
@@ -97,11 +104,14 @@ CREATE TABLE Empleados (
     TandaId INTEGER NOT NULL,
     FechaIngreso DATE NOT NULL,
     EstadoID INTEGER NOT NULL,
+    UsuarioID INTEGER NOT NULL,
     FOREIGN KEY (TandaId) REFERENCES Tandas(Identificador),
-    FOREIGN KEY (EstadoID) REFERENCES Estados(EstadoID)
+    FOREIGN KEY (EstadoID) REFERENCES Estados(EstadoID),
+    FOREIGN KEY (UsuarioID) REFERENCES Usuarios(Identificador)
 );
 ''')
 
+# Crear la tabla ProcesoReservacionHoras
 cursor.execute('''
 CREATE TABLE ProcesoReservacionHoras (
     NoReservacion INTEGER PRIMARY KEY,

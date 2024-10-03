@@ -52,10 +52,10 @@
                 <form method="POST" novalidate>
                     {% csrf_token %}
                     <div class="form-group">
-                        {{ form.nombre.label_tag }}
-                        {{ form.nombre }}
-                        {% if form.nombre.errors %}
-                            <div class="text-danger">{{ form.nombre.errors }}</div>
+                        {{ form.no_carnet.label_tag }}
+                        {{ form.no_carnet }}
+                        {% if form.no_carnet.errors %}
+                            <div class="text-danger">{{ form.no_carnet.errors }}</div>
                         {% endif %}
                     </div>
                     <div class="form-group">

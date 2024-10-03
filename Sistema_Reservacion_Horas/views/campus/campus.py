@@ -2,8 +2,20 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from Sistema_Reservacion_Horas.models.aulas_model import Campus
 from Sistema_Reservacion_Horas.forms.campus_forms import CampusForms
+from django.http import HttpResponseForbidden
+
+# Verificación de permisos
+def admin_required(view_func):
+    def wrapper(request, *args, **kwargs):
+        tipo_usuario = request.session.get('tipo_usuario')
+        if tipo_usuario != 'Administrador':
+            return HttpResponseForbidden("No tienes permiso para acceder a esta sección.")
+        return view_func(request, *args, **kwargs)
+    return wrapper
 
 # Campus CRUD
+
+@admin_required
 def listar_campus(request):
     query = request.GET.get('q', '')  # Obtiene la consulta de búsqueda
     if query:
@@ -13,6 +25,8 @@ def listar_campus(request):
 
     return render(request, 'campus/listar_campus.html', {'campus': campus})
 
+
+@admin_required
 def agregar_campus(request):
     if request.method == 'POST':
         form = CampusForms(request.POST)
@@ -24,6 +38,8 @@ def agregar_campus(request):
         form = CampusForms()
     return render(request, 'campus/agregar_campus.html', {'form': form})
 
+
+@admin_required
 def editar_campus(request, pk):
     campus = get_object_or_404(Campus, pk=pk)
     if request.method == 'POST':
@@ -36,6 +52,8 @@ def editar_campus(request, pk):
         form = CampusForms(instance=campus)
     return render(request, 'campus/editar_campus.html', {'form': form})
 
+
+@admin_required
 def eliminar_campus(request, pk):
     campus = get_object_or_404(Campus, pk=pk)
     if request.method == 'POST':

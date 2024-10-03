@@ -25,7 +25,7 @@
 
         /* Ajusta el margen del contenido principal */
         .content {
-            margin-left: 250px; /* Para alinear con el menú */
+            margin-left: 150px; /* Para alinear con el menú */
             padding: 20px;
             text-align: center;
             margin-top: 50px;
@@ -33,9 +33,6 @@
 
         /* Estilo para el botón de cerrar sesión */
         .logout-button {
-            position: fixed; /* Fija la posición */
-            bottom: 20px; /* Ubicación desde el fondo */
-            left: 55px; /* Ubicación desde la izquierda */
             padding: 10px 15px; /* Espaciado interno del botón */
             background-color: #c82333; /* Color de fondo del botón */
             color: white; /* Color del texto del botón */
@@ -43,26 +40,79 @@
             border-radius: 5px; /* Bordes redondeados */
             cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
             text-align: center; /* Centra el texto del botón */
-            z-index: 1000; /* Asegura que esté por encima de otros elementos */
+            margin-top: 10px;
         }
 
         .logout-button:hover {
             background-color: #a71d2a; /* Color al pasar el ratón sobre el botón */
         }
 
-        .user-info {
-            position: fixed; /* Fija la posición */
-            bottom: 70px; /* Ubicación desde el fondo */
-            left: 55px; /* Ubicación desde la izquierda */
-            font-size: 1rem; /* Ajusta el tamaño de la fuente */
-            color: white; /* Color del texto */
-            z-index: 1000; /* Asegura que esté por encima de otros elementos */
+        /* Dropdown style */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 80px;
         }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #093e73; /* Fondo blanco para el dropdown */
+            min-width: 200px;
+            z-index: 1;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            border-radius: 15px;
+            left: 50%; /* Alineación horizontal centrada */
+            transform: translateX(-50%); /* Alineación centrada en base al ancho */
+            margin-top: 5px; /* Espacio entre el nombre y el dropdown */
+        }
+
+        .dropdown-content a {
+            color: white; /* Color negro para los enlaces */
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #575757; /* Color al pasar el ratón sobre el enlace */
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-toggle {
+            cursor: pointer;
+        }
+
+        .user-info img {
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+        }
+
     </style>
 
     <!-- Menú vertical -->
     <nav class="vertical-nav">
+        <!-- Dropdown para el usuario -->
+        <div class="dropdown">
+            <div class="user-info dropdown-toggle" id="userDropdown">
+                {% if usuario %}
+                    <img src="{% static 'images/user.png' %}" alt="User Icon">
+                    {{ usuario.nombre }}
+                {% endif %}
+            </div>
+
+            <!-- Menú desplegable de usuario -->
+            <div class="dropdown-content">
+                <a href="{% url 'logout' %}" class="logout-button">Cerrar sesión</a>
+            </div>
+        </div>
+
         <ul class="nav flex-column">
+            {% if tipo_usuario == 'Administrador' %}
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'listar_campus' %}">Gestión de Campus</a>
             </li>
@@ -81,15 +131,18 @@
             <li class="nav-item">
                 <a class="nav-link" href="#">Gestión de Empleados</a>
             </li>
+            {% endif %}
             <li class="nav-item">
                 <a class="nav-link" href="#">Reservación de Horas</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Consulta por Criterio de Reservación</a>
             </li>
+        {% if tipo_usuario == 'Administrador' %}
             <li class="nav-item">
                 <a class="nav-link" href="#">Reporte de Reservación</a>
             </li>
+        {% endif %}
         </ul>
     </nav>
 
@@ -99,15 +152,21 @@
         <p>Seleccione una opción del menú de la izquierda.</p>
     </div>
 
-    <!-- Nombre del usuario actual -->
-    <div class="user-info" >
-    {% if usuario %}
-        <img src="{% static 'images/user.png' %}" alt="User Icon" style="width: 20px; height: 20px; margin-right: 5px;">
-        {{ usuario.nombre }}
-    {% endif %}
-</div>
+    <script>
+        // Script para manejar el dropdown
+        document.getElementById('userDropdown').addEventListener('click', function(event) {
+            event.stopPropagation();
+            var dropdownContent = document.querySelector('.dropdown-content');
+            dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+        });
 
+        // Cerrar dropdown al hacer clic fuera
+        document.addEventListener('click', function(event) {
+            var dropdownContent = document.querySelector('.dropdown-content');
+            if (!dropdownContent.contains(event.target) && !document.getElementById('userDropdown').contains(event.target)) {
+                dropdownContent.style.display = 'none';
+            }
+        });
+    </script>
 
-    <!-- Botón de cerrar sesión -->
-    <button class="logout-button" onclick="window.location.href='{% url 'logout' %}'">Cerrar sesión</button>
 {% endblock %}
