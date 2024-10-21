@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Empleado{% endblock %}
+
+{% block content %}
+<a href="{% url 'listar_empleados' %}" class="btn btn-secondary mb-3" style="margin-left: 20px">
+    &#8592; Volver
+</a>
+<div class="container mt-5">
+    <h1 class="text-center" style="margin-top: -30px">Editar un Empleado</h1>
+    <form method="post" class="needs-validation" novalidate>
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="{{ form.nombre.id_for_label }}">Nombre:</label>
+            {{ form.nombre }}
+            {% if form.nombre.errors %}
+                <div class="text-danger">{{ form.nombre.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.usuario.id_for_label }}">Usuario Asignado:</label>
+            {{ form.usuario }}
+            {% if form.usuario.errors %}
+                <div class="text-danger">{{ form.usuario.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.cedula.id_for_label }}">Cédula:</label>
+            {{ form.cedula }}
+            {% if form.cedula.errors %}
+                <div class="text-danger">{{ form.cedula.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.tanda.id_for_label }}">Tanda:</label>
+            {{ form.tanda }}
+            {% if form.tanda.errors %}
+                <div class="text-danger">{{ form.tanda.errors }}</div>
+            {% endif %}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.fecha_ingreso.id_for_label }}">Fecha de Ingreso:</label>
+            <input type="date" name="fecha_ingreso" class="form-control" value="{{ form.fecha_ingreso.value|date:'Y-m-d' }}">
+            {% if form.fecha_ingreso.errors %}
+                <div class="text-danger">{{ form.fecha_ingreso.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.estado.id_for_label }}">Estado:</label>
+            {{ form.estado }}
+            {% if form.estado.errors %}
+                <div class="text-danger">{{ form.estado.errors }}</div>
+            {% endif %}
+        </div>
+        <button type="submit" class="btn btn-success">Guardar Cambios</button>
+    </form>
+</div>
+{% endblock %}

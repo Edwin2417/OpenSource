@@ -64,3 +64,24 @@ class Usuario(models.Model):
 
     def __str__(self):
         return self.nombre
+
+class Tanda(models.Model):
+    descripcion = models.CharField(max_length=80)
+    estado = models.ForeignKey('Estado', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.descripcion
+
+class Empleado(models.Model):
+    identificador = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=255)
+    cedula = models.CharField(max_length=15, unique=True)
+    tanda = models.ForeignKey(Tanda, on_delete=models.CASCADE)
+    fecha_ingreso = models.DateField()
+    estado = models.ForeignKey(Estado, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.nombre
+
+
