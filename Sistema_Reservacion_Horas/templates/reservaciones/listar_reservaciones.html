@@ -1,0 +1,60 @@
+<!-- Prueba/templates/reservaciones/listar_reservaciones.html -->
+{% extends 'base.html' %}
+
+{% block title %}Listado de Reservaciones de Horas{% endblock %}
+
+{% block content %}
+<a href="{% url 'home' %}" class="btn btn-secondary mb-3" style="margin-left: 20px">
+    &#8592; Volver al menú
+</a>
+<div class="container mt-5">
+    <h1 class="text-center" style="margin-top: -30px">Listado de Reservaciones de Horas</h1>
+
+    <div class="d-flex justify-content-between mb-3">
+        <!-- Botón "Agregar una Reservación" alineado a la izquierda -->
+        <a href="{% url 'agregar_reservacion' %}" class="btn btn-primary">Agregar una Reservación</a>
+
+        <!-- Formulario de búsqueda alineado a la derecha -->
+        <form method="GET" class="flex-grow-1 ml-2" style="max-width: 300px; margin-top: 10px"> <!-- Ajusta el ancho del buscador -->
+            <div class="input-group">
+                <input type="text" name="q" class="form-control" placeholder="Buscar por empleado" value="{{ request.GET.q }}">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit" style="margin-top: -0.5px">Buscar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th>No. Reservación</th>
+                <th>Empleado</th>
+                <th>Aula</th>
+                <th>Usuario</th>
+                <th>Fecha Reservación</th>
+                <th>Cantidad de Horas</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for reservacion in reservaciones %}
+            <tr>
+                <td>{{ reservacion.no_reservacion }}</td>
+                <td>{{ reservacion.empleado.nombre }}</td>
+                <td>{{ reservacion.aula.descripcion }}</td>
+                <td>{{ reservacion.usuario.nombre }}</td>
+                <td>{{ reservacion.fecha_reservacion }}</td>
+                <td>{{ reservacion.cantidad_horas }}</td>
+                <td>{{ reservacion.estado.descripcion }}</td>
+                <td>
+                    <a href="{% url 'editar_reservacion' reservacion.pk %}" class="btn btn-warning btn-sm">Editar</a>
+                    <a href="{% url 'eliminar_reservacion' reservacion.pk %}" class="btn btn-danger btn-sm">Eliminar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

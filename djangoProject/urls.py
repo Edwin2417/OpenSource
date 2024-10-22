@@ -16,4 +16,6 @@ urlpatterns = [
     path('usuarios/', include('Sistema_Reservacion_Horas.urls.usuarios.usuarios')),
 
     path('empleados/', include('Sistema_Reservacion_Horas.urls.empleados.empleados')),
+
+    path('proceso_reservacion/', include('Sistema_Reservacion_Horas.urls.proceso_reservacion.proceso_reservacion')),
 ]

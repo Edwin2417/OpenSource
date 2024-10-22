@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cargando...</title>
+    <!-- Favicon -->
+    <link rel="icon" href="{% static 'images/logo.ico' %}" type="image/x-icon">
+    <!-- Bootstrap -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column; /* Asegura que los elementos se alineen verticalmente */
+            height: 100vh; /* Hace que ocupe toda la altura de la ventana */
+            background-color: #f8f9fa; /* Color de fondo claro */
+        }
+        .loader {
+            border: 5px solid #f3f3f3; /* Color de fondo */
+            border-top: 5px solid #3498db; /* Color del spinner */
+            border-radius: 50%;
+            margin-left: 170px;
+            align-content: center;
+            width: 80px; /* Aumentar el ancho del spinner */
+            height: 80px; /* Aumentar el alto del spinner */
+            animation: spin 1s linear infinite; /* Animación de giro */
+            margin-top: 20px; /* Espacio arriba del spinner */
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="text-center">
+        <img src="{% static 'images/logo.png' %}" alt="Logo" class="img-fluid" style="max-height: 400px; margin-bottom: -100px"> <!-- Aumentar el tamaño del logo -->
+        <h1 class="mt-4">Inicio de sesión exitoso</h1>
+        <p>Cargando...</p>
+        <div class="loader"></div> <!-- Spinner de carga centrado -->
+    </div>
+
+    <!-- Scripts de Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        setTimeout(function() {
+            window.location.href = "{% url 'home' %}";
+        }, 2000); // 2000 ms = 2 segundos
+    </script>
+</body>
+</html>

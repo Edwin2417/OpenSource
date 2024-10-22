@@ -1,0 +1,19 @@
+<!-- Prueba/templates/reservaciones/eliminar_reservacion.html -->
+{% extends 'base.html' %}
+
+{% block title %}Eliminar Reservación de Horas{% endblock %}
+
+{% block content %}
+<a href="{% url 'listar_reservaciones' %}" class="btn btn-secondary mb-3" style="margin-left: 20px">
+    &#8592; Volver
+</a>
+<div class="container mt-5">
+    <h1 class="text-center text-danger" style="margin-top: -30px">Eliminar Reservación de Horas</h1>
+    <p class="text-center">¿Estás seguro de que deseas eliminar la reservación número {{ reservacion.no_reservacion }} del {{ reservacion.fecha_reservacion }}?</p>
+    <form method="post" class="text-center">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+        <a href="{% url 'listar_reservaciones' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

@@ -85,3 +85,17 @@ class Empleado(models.Model):
         return self.nombre
 
 
+class ProcesoReservacionHoras(models.Model):
+    no_reservacion = models.AutoField(primary_key=True)
+    empleado = models.ForeignKey('Empleado', on_delete=models.CASCADE)
+    aula = models.ForeignKey('AulasLaboratorios', on_delete=models.CASCADE)
+    usuario = models.ForeignKey('Usuario', on_delete=models.CASCADE)
+    fecha_reservacion = models.DateField()
+    cantidad_horas = models.IntegerField()
+    comentario = models.TextField(null=True, blank=True)
+    estado = models.ForeignKey('Estado', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'Reservación {self.no_reservacion} - {self.fecha_reservacion}'
+
+

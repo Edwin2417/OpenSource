@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Editar Reservación de Horas{% endblock %}
+
+{% block content %}
+<a href="{% url 'listar_reservaciones' %}" class="btn btn-secondary mb-3" style="margin-left: 20px">
+    &#8592; Volver
+</a>
+<div class="container mt-5">
+    <h1 class="text-center" style="margin-top: -30px">Editar Reservación de Horas</h1>
+    <form method="post" class="needs-validation" novalidate>
+        {% csrf_token %}
+
+        <div class="form-group">
+            {{ form.empleado.label_tag }}  <!-- Etiqueta para el empleado -->
+            {{ form.empleado }}  <!-- Campo de entrada para el empleado -->
+            {% if form.empleado.errors %}
+                <div class="text-danger">{{ form.empleado.errors }}</div>  <!-- Muestra errores -->
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.aula.label_tag }}  <!-- Etiqueta para el aula -->
+            {{ form.aula }}  <!-- Campo de entrada para el aula -->
+            {% if form.aula.errors %}
+                <div class="text-danger">{{ form.aula.errors }}</div>  <!-- Muestra errores -->
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <!-- Etiqueta para el usuario -->
+            {{ form.usuario }}  <!-- Campo de entrada para el usuario -->
+            {% if form.usuario.errors %}
+                <div class="text-danger">{{ form.usuario.errors }}</div>  <!-- Muestra errores -->
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.fecha_reservacion.id_for_label }}">Fecha de Reservación:</label>
+            <input type="date" name="fecha_reservacion" class="form-control" value="{{ form.fecha_reservacion.value|date:'Y-m-d' }}">
+            {% if form.fecha_reservacion.errors %}
+                <div class="text-danger">{{ form.fecha_reservacion.errors }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.cantidad_horas.label_tag }}  <!-- Etiqueta para la cantidad de horas -->
+            {{ form.cantidad_horas }}  <!-- Campo de entrada para la cantidad de horas -->
+            {% if form.cantidad_horas.errors %}
+                <div class="text-danger">{{ form.cantidad_horas.errors }}</div>  <!-- Muestra errores -->
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.comentario.label_tag }}  <!-- Etiqueta para el comentario -->
+            {{ form.comentario }}  <!-- Campo de entrada para el comentario -->
+            {% if form.comentario.errors %}
+                <div class="text-danger">{{ form.comentario.errors }}</div>  <!-- Muestra errores -->
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            {{ form.estado.label_tag }}  <!-- Etiqueta para el estado -->
+            {{ form.estado }}  <!-- Campo de entrada para el estado -->
+            {% if form.estado.errors %}
+                <div class="text-danger">{{ form.estado.errors }}</div>  <!-- Muestra errores -->
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-success">Guardar Cambios</button>
+    </form>
+</div>
+{% endblock %}

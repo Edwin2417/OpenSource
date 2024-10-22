@@ -133,14 +133,14 @@
             </li>
             {% endif %}
             <li class="nav-item">
-                <a class="nav-link" href="#">Reservación de Horas</a>
+                <a class="nav-link" href="{% url 'listar_reservaciones' %}">Reservación de Horas</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Consulta por Criterio de Reservación</a>
             </li>
         {% if tipo_usuario == 'Administrador' %}
             <li class="nav-item">
-                <a class="nav-link" href="#">Reporte de Reservación</a>
+                <a class="nav-link" href="#">Generar Reportes de Reservación</a>
             </li>
         {% endif %}
         </ul>
