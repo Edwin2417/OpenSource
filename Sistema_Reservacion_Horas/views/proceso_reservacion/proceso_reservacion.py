@@ -21,9 +21,10 @@ def listar_reservaciones(request):
     if tipo_usuario == 'Administrador':
         query = request.GET.get('q', '')  # Para búsquedas
         if query:
-            reservaciones = ProcesoReservacionHoras.objects.filter(empleado__nombre__icontains=query)  # Filtra por nombre de empleado
+            # Filtrar las reservaciones por el campo relacionado al aula
+            reservaciones = ProcesoReservacionHoras.objects.filter(aula__descripcion__icontains=query)
         else:
-            reservaciones = ProcesoReservacionHoras.objects.all()  # Muestra todas las reservaciones si no hay búsqueda
+            reservaciones = ProcesoReservacionHoras.objects.all()
     else:
         # Si no es administrador, filtra por el usuario que está logueado
         query = request.GET.get('q', '')  # Para búsquedas
