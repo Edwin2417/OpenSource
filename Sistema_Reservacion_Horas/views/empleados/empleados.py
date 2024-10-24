@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from Sistema_Reservacion_Horas.models.aulas_model import Empleado  # Asegúrate de que el modelo Empleado esté correctamente importado
 from Sistema_Reservacion_Horas.forms.empleados_form import EmpleadosForms  # Asegúrate de que la ruta sea correcta
 from django.http import HttpResponseForbidden
+from Sistema_Reservacion_Horas.views.utils import paginar_objetos
 
 # Verificación de permisos
 def admin_required(view_func):
@@ -20,7 +21,9 @@ def listar_empleados(request):
     else:
         empleados = Empleado.objects.all()  # Obtiene todos los empleados si no hay consulta
 
-    return render(request, 'empleados/listar_empleados.html', {'empleados': empleados})
+    page_obj = paginar_objetos(request, empleados, 4)
+
+    return render(request, 'empleados/listar_empleados.html', {'page_obj': page_obj, 'empleados': empleados})
 
 @admin_required
 def agregar_empleados(request):

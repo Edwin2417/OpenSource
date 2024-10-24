@@ -3,6 +3,7 @@ from django.contrib import messages
 from Sistema_Reservacion_Horas.models.aulas_model import Campus
 from Sistema_Reservacion_Horas.forms.campus_forms import CampusForms
 from django.http import HttpResponseForbidden
+from Sistema_Reservacion_Horas.views.utils import paginar_objetos
 
 # Verificación de permisos
 def admin_required(view_func):
@@ -23,7 +24,9 @@ def listar_campus(request):
     else:
         campus = Campus.objects.all()  # Obtiene todas las aulas si no hay consulta
 
-    return render(request, 'campus/listar_campus.html', {'campus': campus})
+    page_obj = paginar_objetos(request, campus, 4)
+
+    return render(request, 'campus/listar_campus.html', {'page_obj': page_obj, 'campus': campus})
 
 
 @admin_required

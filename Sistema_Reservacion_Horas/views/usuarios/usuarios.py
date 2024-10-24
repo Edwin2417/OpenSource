@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from Sistema_Reservacion_Horas.models.aulas_model import Usuario
 from Sistema_Reservacion_Horas.forms.usuario_form import UsuarioForms
 from django.http import HttpResponseForbidden
+from Sistema_Reservacion_Horas.views.utils import paginar_objetos
 
 # Verificación de permisos
 def admin_required(view_func):
@@ -21,7 +22,14 @@ def listar_usuario(request):
     else:
         usuarios = Usuario.objects.all()  # Obtiene todos los usuarios si no hay consulta
 
-    return render(request, 'usuarios/listar_usuario.html', {'usuarios': usuarios})
+    # Utiliza la función auxiliar para paginar
+    page_obj = paginar_objetos(request, usuarios, 4)
+
+    return render(request, 'usuarios/listar_usuario.html', {
+        'page_obj': page_obj,  # Objeto paginado
+        'query': query  # Mantener el término de búsqueda en la plantilla
+    })
+
 
 @admin_required
 def agregar_usuario(request):

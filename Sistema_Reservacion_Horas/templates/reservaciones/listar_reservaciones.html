@@ -50,11 +50,15 @@
                 <td>{{ reservacion.estado.descripcion }}</td>
                 <td>
                     <a href="{% url 'editar_reservacion' reservacion.pk %}" class="btn btn-warning btn-sm">Editar</a>
+                    {% if tipo_usuario == 'Administrador' %}
                     <a href="{% url 'eliminar_reservacion' reservacion.pk %}" class="btn btn-danger btn-sm">Eliminar</a>
+                    {% endif %}
+
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+    {% include '_paginacion.html' %}
 </div>
 {% endblock %}

@@ -10,15 +10,12 @@
     <h1 class="text-center">Listado de Usuarios</h1>
 
     <div class="d-flex justify-content-between mb-3">
-        <!-- Formulario de búsqueda -->
-
-
-        <!-- Botón "Agregar un Usuario" alineado a la derecha -->
         <a href="{% url 'agregar_usuario' %}" class="btn btn-primary">Agregar un Usuario</a>
 
-         <form method="GET" class="flex-grow-1 mr-2" style="margin-left: 700px; margin-top: 10px">
+        <!-- Formulario de búsqueda -->
+        <form method="GET" class="flex-grow-1 mr-2" style="margin-left: 700px; margin-top: 10px">
             <div class="input-group" style="max-width: 300px;"> <!-- Ajusta el ancho del buscador -->
-                <input type="text" name="q" class="form-control" placeholder="Buscar..." value="{{ request.GET.q }}">
+                <input type="text" name="q" class="form-control" placeholder="Buscar..." value="{{ query }}">
                 <div class="input-group-append">
                     <button class="btn btn-primary" type="submit" style="margin-top: -0.5px">Buscar</button>
                 </div>
@@ -38,7 +35,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for usuario in usuarios %}
+            {% for usuario in page_obj.object_list %}
             <tr>
                 <td>{{ usuario.nombre }}</td>
                 <td>{{ usuario.cedula }}</td>
@@ -53,5 +50,8 @@
             {% endfor %}
         </tbody>
     </table>
+
+    <!-- Incluir paginación -->
+    {% include '_paginacion.html' %}
 </div>
 {% endblock %}

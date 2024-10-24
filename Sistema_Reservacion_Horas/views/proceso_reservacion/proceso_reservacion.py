@@ -2,6 +2,8 @@ from django.shortcuts import render, get_object_or_404, redirect
 from Sistema_Reservacion_Horas.models.aulas_model import ProcesoReservacionHoras, AulasLaboratorios, Estado
 from Sistema_Reservacion_Horas.forms.proceso_reservacion_forms import ProcesoReservacionHorasForm
 from django.http import HttpResponseForbidden
+from django.contrib import messages
+from Sistema_Reservacion_Horas.views.utils import paginar_objetos
 
 def admin_required(view_func):
     def wrapper(request, *args, **kwargs):
@@ -33,18 +35,9 @@ def listar_reservaciones(request):
         else:
             reservaciones = ProcesoReservacionHoras.objects.filter(usuario__identificador=usuario_id)  # Muestra solo las reservaciones del usuario logueado
 
-    return render(request, 'reservaciones/listar_reservaciones.html', {'reservaciones': reservaciones})
+    page_obj = paginar_objetos(request, reservaciones, 4)
 
-
-# Vista para agregar una nueva reservación de horas
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib import messages
-from Sistema_Reservacion_Horas.models.aulas_model import ProcesoReservacionHoras, AulasLaboratorios
-
-
-# Vista para agregar una nueva reservación de horas
-# Vista para agregar una nueva reservación de horas
-from Sistema_Reservacion_Horas.models.aulas_model import ProcesoReservacionHoras, AulasLaboratorios, Estado
+    return render(request, 'reservaciones/listar_reservaciones.html', {'page_obj': page_obj, 'reservaciones': reservaciones, 'tipo_usuario': tipo_usuario,})
 
 
 # Vista para agregar una nueva reservación de horas
@@ -136,10 +129,7 @@ def editar_reservacion(request, pk):
     return render(request, 'reservaciones/editar_reservacion.html', {'form': form, 'reservacion': reservacion})
 
 
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib import messages
-from Sistema_Reservacion_Horas.models.aulas_model import ProcesoReservacionHoras, AulasLaboratorios, Estado
-
+@admin_required
 def eliminar_reservacion(request, pk):
     reservacion = get_object_or_404(ProcesoReservacionHoras, pk=pk)
     aula = reservacion.aula  # Guarda el aula relacionada

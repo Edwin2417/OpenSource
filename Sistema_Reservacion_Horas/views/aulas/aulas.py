@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from Sistema_Reservacion_Horas.models.aulas_model import AulasLaboratorios
 from Sistema_Reservacion_Horas.forms.aulas_forms import AulasLaboratoriosForm
 from django.http import HttpResponseForbidden
+from Sistema_Reservacion_Horas.views.utils import paginar_objetos
 
 # Verificación de permisos
 def admin_required(view_func):
@@ -21,7 +22,9 @@ def listar_aulas(request):
     else:
         aulas = AulasLaboratorios.objects.all()  # Obtiene todas las aulas si no hay consulta
 
-    return render(request, 'aulas/listar_aulas.html', {'aulas': aulas})
+    page_obj = paginar_objetos(request, aulas, 4)
+
+    return render(request, 'aulas/listar_aulas.html', {'page_obj': page_obj, 'aulas': aulas})
 
 
 @admin_required
