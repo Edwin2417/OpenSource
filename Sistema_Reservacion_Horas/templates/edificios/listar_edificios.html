@@ -9,34 +9,34 @@
 <div class="container mt-5">
     <h1 class="text-center" style="margin-top: -30px">Listado de Edificios</h1>
 
-        <div class="d-flex justify-content-between mb-3">
-            <!-- Botón "Agregar un Aula/Laboratorio" alineado a la izquierda -->
-            <a href="{% url 'agregar_edificio' %}" class="btn btn-primary">Agregar un Edificio</a>
+    <div class="d-flex justify-content-between mb-3">
+        <a href="{% url 'agregar_edificio' %}" class="btn btn-primary">Agregar un Edificio</a>
 
-            <!-- Formulario de búsqueda alineado a la derecha -->
-            <form method="GET" class="flex-grow-1 ml-2" style="max-width: 300px; margin-top: 10px"> <!-- Ajusta el ancho del buscador -->
-                <div class="input-group">
-                    <input type="text" name="q" class="form-control" placeholder="Buscar por descripción" value="{{ request.GET.q }}">
-                    <div class="input-group-append">
-                        <button class="btn btn-primary" type="submit" style="margin-top: -0.5px">Buscar</button>
-                    </div>
+        <!-- Formulario de búsqueda -->
+        <form method="GET" class="flex-grow-1 ml-2" style="max-width: 300px; margin-top: 10px">
+            <div class="input-group">
+                <input type="text" name="q" class="form-control" placeholder="Buscar por descripción" value="{{ query }}">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">Buscar</button>
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
+    </div>
+
     <table class="table table-striped table-bordered">
         <thead class="thead-dark">
             <tr>
                 <th>Descripción</th>
-                <th>Campus</th>
+                <th>Campus</th> <!-- Agregado el encabezado de la columna Campus -->
                 <th>Estado</th>
                 <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
-            {% for edificio in edificios %}
+            {% for edificio in page_obj.object_list %}
             <tr>
                 <td>{{ edificio.descripcion }}</td>
-                <td>{{ edificio.campus.descripcion }}</td>
+                <td>{{ edificio.campus.descripcion }}</td> <!-- Asegúrate de que 'campus.descripcion' sea correcto -->
                 <td>{{ edificio.estado.descripcion }}</td>
                 <td>
                     <a href="{% url 'editar_edificio' edificio.id %}" class="btn btn-warning btn-sm">Editar</a>
@@ -46,6 +46,52 @@
             {% endfor %}
         </tbody>
     </table>
-    {% include '_paginacion.html' %}
+
+    <!-- Controles de paginación -->
+    <div class="d-flex justify-content-between align-items-center">
+        <p>Mostrando {{ page_obj.start_index }} a {{ page_obj.end_index }} de {{ page_obj.paginator.count }} Edificios</p>
+
+        <nav aria-label="Paginación">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?q={{ query }}&page=1" aria-label="Primero">&laquo;&laquo;</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?q={{ query }}&page={{ page_obj.previous_page_number }}" aria-label="Anterior">&laquo;</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">&laquo;&laquo;</span>
+                    </li>
+                    <li class="page-item disabled">
+                        <span class="page-link">&laquo;</span>
+                    </li>
+                {% endif %}
+
+                <li class="page-item active">
+                    <span class="page-link">
+                        Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+                    </span>
+                </li>
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?q={{ query }}&page={{ page_obj.next_page_number }}" aria-label="Siguiente">&raquo;</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?q={{ query }}&page={{ page_obj.paginator.num_pages }}" aria-label="Último">&raquo;&raquo;</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">&raquo;</span>
+                    </li>
+                    <li class="page-item disabled">
+                        <span class="page-link">&raquo;&raquo;</span>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
 </div>
 {% endblock %}

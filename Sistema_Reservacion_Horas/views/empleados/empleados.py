@@ -23,7 +23,11 @@ def listar_empleados(request):
 
     page_obj = paginar_objetos(request, empleados, 4)
 
-    return render(request, 'empleados/listar_empleados.html', {'page_obj': page_obj, 'empleados': empleados})
+    return render(request, 'empleados/listar_empleados.html', {
+        'page_obj': page_obj,
+        'query': query  # Para mantener el término de búsqueda en la plantilla
+    })
+
 
 @admin_required
 def agregar_empleados(request):

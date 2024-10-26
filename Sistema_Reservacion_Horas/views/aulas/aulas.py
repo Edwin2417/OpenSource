@@ -24,8 +24,10 @@ def listar_aulas(request):
 
     page_obj = paginar_objetos(request, aulas, 4)
 
-    return render(request, 'aulas/listar_aulas.html', {'page_obj': page_obj, 'aulas': aulas})
-
+    return render(request, 'aulas/listar_aulas.html', {
+        'page_obj': page_obj,
+        'query': query  # Para mantener la búsqueda en la plantilla
+    })
 
 @admin_required
 # Vista para agregar una nueva aula/laboratorio

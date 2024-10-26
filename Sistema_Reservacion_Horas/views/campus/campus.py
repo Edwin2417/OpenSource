@@ -20,14 +20,17 @@ def admin_required(view_func):
 def listar_campus(request):
     query = request.GET.get('q', '')  # Obtiene la consulta de búsqueda
     if query:
-        campus = Campus.objects.filter(descripcion__icontains=query)  # Filtra aulas por descripción
+        campus = Campus.objects.filter(descripcion__icontains=query)  # Filtra campus por descripción
     else:
-        campus = Campus.objects.all()  # Obtiene todas las aulas si no hay consulta
+        campus = Campus.objects.all()  # Obtiene todos los campus si no hay consulta
 
+    # Pagina el resultado
     page_obj = paginar_objetos(request, campus, 4)
 
-    return render(request, 'campus/listar_campus.html', {'page_obj': page_obj, 'campus': campus})
-
+    return render(request, 'campus/listar_campus.html', {
+        'page_obj': page_obj,  # Objeto paginado
+        'query': query  # Mantener el término de búsqueda en la plantilla
+    })
 
 @admin_required
 def agregar_campus(request):

@@ -20,7 +20,7 @@
         .nav-link {
             color: white !important;
             font-size: 1.1rem; /* Aumenta el tamaño de la fuente */
-            margin-bottom: 15px; /* Aumenta el espacio entre los elementos */
+            margin-bottom: 30px; /* Aumenta el espacio entre los elementos */
         }
 
         /* Ajusta el margen del contenido principal */
@@ -135,14 +135,6 @@
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'listar_reservaciones' %}">Reservación de Horas</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Consulta por Criterio de Reservación</a>
-            </li>
-        {% if tipo_usuario == 'Administrador' %}
-            <li class="nav-item">
-                <a class="nav-link" href="#">Generar Reportes de Reservación</a>
-            </li>
-        {% endif %}
         </ul>
     </nav>
 

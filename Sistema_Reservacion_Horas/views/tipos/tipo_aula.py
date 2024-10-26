@@ -1,8 +1,9 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render
 from Sistema_Reservacion_Horas.models.aulas_model import TiposAulas
-from Sistema_Reservacion_Horas.forms.tipos_aulas_forms import TiposAulasForm
-from django.http import HttpResponseForbidden
 from Sistema_Reservacion_Horas.views.utils import paginar_objetos
+from django.http import HttpResponseForbidden
+from Sistema_Reservacion_Horas.forms.tipos_aulas_forms import TiposAulasForm
+from django.shortcuts import render, redirect, get_object_or_404
 
 # Verificación de permisos
 def admin_required(view_func):
@@ -14,7 +15,6 @@ def admin_required(view_func):
     return wrapper
 
 @admin_required
-# Vista para listar los tipos de aula
 def listar_tipo_aula(request):
     query = request.GET.get('q', '')  # Obtiene la consulta de búsqueda
     if query:
@@ -22,9 +22,13 @@ def listar_tipo_aula(request):
     else:
         tipos_aulas = TiposAulas.objects.all()  # Obtiene todas las aulas si no hay consulta
 
+    # Paginar los resultados
     page_obj = paginar_objetos(request, tipos_aulas, 4)
 
-    return render(request, 'tipos/listar_tipo_aula.html', {'page_obj': page_obj, 'tipos_aulas': tipos_aulas})
+    return render(request, 'tipos/listar_tipo_aula.html', {
+        'page_obj': page_obj,  # Objeto paginado
+        'query': query  # Pasar la consulta de búsqueda
+    })
 
 
 @admin_required

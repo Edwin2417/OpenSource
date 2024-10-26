@@ -14,9 +14,9 @@
             <a href="{% url 'agregar_aula' %}" class="btn btn-primary">Agregar un Aula/Laboratorio</a>
 
             <!-- Formulario de búsqueda alineado a la derecha -->
-            <form method="GET" class="flex-grow-1 ml-2" style="max-width: 300px; margin-top: 10px"> <!-- Ajusta el ancho del buscador -->
+            <form method="GET" class="flex-grow-1 ml-2" style="max-width: 300px; margin-top: 10px">
                 <div class="input-group">
-                    <input type="text" name="q" class="form-control" placeholder="Buscar por descripción" value="{{ request.GET.q }}">
+                    <input type="text" name="q" class="form-control" placeholder="Buscar por descripción" value="{{ query }}">
                     <div class="input-group-append">
                         <button class="btn btn-primary" type="submit" style="margin-top: -0.5px">Buscar</button>
                     </div>
@@ -37,14 +37,14 @@
                 </tr>
             </thead>
             <tbody>
-                {% for aula in aulas %}
+                {% for aula in page_obj %}
                 <tr>
                     <td>{{ aula.descripcion }}</td>
                     <td>{{ aula.tipo_aula.descripcion }}</td>
                     <td>{{ aula.edificio.descripcion }}</td>
                     <td>{{ aula.capacidad }}</td>
                     <td>{{ aula.cupos_reservados }}</td>
-                    <td>{{ aula.estado.descripcion }}</td> <!-- Mostrar el estado directamente -->
+                    <td>{{ aula.estado.descripcion }}</td>
                     <td>
                         <a href="{% url 'editar_aula' aula.id %}" class="btn btn-warning btn-sm">Editar</a>
                         <a href="{% url 'eliminar_aula' aula.id %}" class="btn btn-danger btn-sm">Eliminar</a>
@@ -53,6 +53,52 @@
                 {% endfor %}
             </tbody>
         </table>
-        {% include '_paginacion.html' %}
+
+        <!-- Controles de paginación -->
+        <div class="d-flex justify-content-between align-items-center">
+            <p>Mostrando {{ page_obj.start_index }} a {{ page_obj.end_index }} de {{ page_obj.paginator.count }} Aulas / Laboratorios</p>
+
+            <nav aria-label="Paginación">
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?q={{ query }}&page=1" aria-label="Primero">&laquo;&laquo;</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?q={{ query }}&page={{ page_obj.previous_page_number }}" aria-label="Anterior">&laquo;</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">&laquo;&laquo;</span>
+                        </li>
+                        <li class="page-item disabled">
+                            <span class="page-link">&laquo;</span>
+                        </li>
+                    {% endif %}
+
+                    <li class="page-item active">
+                        <span class="page-link">
+                            Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+                        </span>
+                    </li>
+
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?q={{ query }}&page={{ page_obj.next_page_number }}" aria-label="Siguiente">&raquo;</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?q={{ query }}&page={{ page_obj.paginator.num_pages }}" aria-label="Último">&raquo;&raquo;</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">&raquo;</span>
+                        </li>
+                        <li class="page-item disabled">
+                            <span class="page-link">&raquo;&raquo;</span>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
     </div>
 {% endblock %}

@@ -14,18 +14,19 @@ def admin_required(view_func):
     return wrapper
 
 @admin_required
-# Vista para listar los tipos de aula
 def listar_edificio(request):
     query = request.GET.get('q', '')  # Obtiene la consulta de búsqueda
     if query:
-        edificios = Edificios.objects.filter(descripcion__icontains=query)  # Filtra aulas por descripción
+        edificios = Edificios.objects.filter(descripcion__icontains=query)  # Filtra edificios por descripción
     else:
-        edificios = Edificios.objects.all()  # Obtiene todas las aulas si no hay consulta
+        edificios = Edificios.objects.all()  # Obtiene todos los edificios si no hay consulta
 
-    page_obj = paginar_objetos(request, edificios, 4)
+    page_obj = paginar_objetos(request, edificios, 4)  # Aplica la paginación con 4 elementos por página
 
-    return render(request, 'edificios/listar_edificios.html', {'page_obj': page_obj, 'edificios': edificios})
-
+    return render(request, 'edificios/listar_edificios.html', {
+        'page_obj': page_obj,
+        'query': query  # Para mantener la búsqueda en la plantilla
+    })
 
 @admin_required
 def agregar_edificio(request):

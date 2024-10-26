@@ -1,10 +1,14 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from Sistema_Reservacion_Horas.models.aulas_model import ProcesoReservacionHoras, AulasLaboratorios, Estado
+from Sistema_Reservacion_Horas.models.aulas_model import ProcesoReservacionHoras, Estado
 from Sistema_Reservacion_Horas.forms.proceso_reservacion_forms import ProcesoReservacionHorasForm
 from django.http import HttpResponseForbidden
 from django.contrib import messages
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from Sistema_Reservacion_Horas.views.utils import paginar_objetos
+from django.db.models import Q
+from datetime import datetime
 
+# Decorador de permiso de administrador
 def admin_required(view_func):
     def wrapper(request, *args, **kwargs):
         tipo_usuario = request.session.get('tipo_usuario')
@@ -13,31 +17,58 @@ def admin_required(view_func):
         return view_func(request, *args, **kwargs)
     return wrapper
 
-# Vista para listar las reservaciones de horas
-# Vista para listar las reservaciones de horas
+@admin_required
 def listar_reservaciones(request):
     usuario_id = request.session.get('usuario_id')
     tipo_usuario = request.session.get('tipo_usuario')
 
-    # Verifica si el usuario es administrador
+    # Recibir parámetros de búsqueda y filtro
+    query = request.GET.get('q', '')
+    filtro = request.GET.get('filtro', 'aula')
+
+    # Inicializar queryset
+    reservaciones = ProcesoReservacionHoras.objects.all()
+
+    # Filtrado para Administrador
     if tipo_usuario == 'Administrador':
-        query = request.GET.get('q', '')  # Para búsquedas
         if query:
-            # Filtrar las reservaciones por el campo relacionado al aula
-            reservaciones = ProcesoReservacionHoras.objects.filter(aula__descripcion__icontains=query)
-        else:
-            reservaciones = ProcesoReservacionHoras.objects.all()
+            if filtro == 'aula':
+                reservaciones = reservaciones.filter(aula__descripcion__icontains=query)
+            elif filtro == 'usuario':
+                reservaciones = reservaciones.filter(usuario__nombre__icontains=query)
+            elif filtro == 'empleado':
+                reservaciones = reservaciones.filter(empleado__nombre__icontains=query)
+            elif filtro == 'fecha':
+                try:
+                    fecha_query = datetime.strptime(query, '%Y-%m-%d').date()
+                    reservaciones = reservaciones.filter(fecha_reservacion=fecha_query)
+                except ValueError:
+                    messages.error(request, 'Formato de fecha inválido. Use YYYY-MM-DD.')
     else:
-        # Si no es administrador, filtra por el usuario que está logueado
-        query = request.GET.get('q', '')  # Para búsquedas
+        # Filtrado para otros tipos de usuarios
+        reservaciones = reservaciones.filter(usuario__identificador=usuario_id)
         if query:
-            reservaciones = ProcesoReservacionHoras.objects.filter(usuario__identificador=usuario_id, empleado__nombre__icontains=query)  # Filtra por nombre de empleado y usuario logueado
-        else:
-            reservaciones = ProcesoReservacionHoras.objects.filter(usuario__identificador=usuario_id)  # Muestra solo las reservaciones del usuario logueado
+            if filtro == 'aula':
+                reservaciones = reservaciones.filter(aula__descripcion__icontains=query)
+            elif filtro == 'empleado':
+                reservaciones = reservaciones.filter(empleado__nombre__icontains=query)
+            elif filtro == 'fecha':
+                try:
+                    fecha_query = datetime.strptime(query, '%Y-%m-%d').date()
+                    reservaciones = reservaciones.filter(fecha_reservacion=fecha_query)
+                except ValueError:
+                    messages.error(request, 'Formato de fecha inválido. Use YYYY-MM-DD.')
 
-    page_obj = paginar_objetos(request, reservaciones, 4)
+    paginator = Paginator(reservaciones, 4)  # Muestra 10 reservaciones por página
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
-    return render(request, 'reservaciones/listar_reservaciones.html', {'page_obj': page_obj, 'reservaciones': reservaciones, 'tipo_usuario': tipo_usuario,})
+    return render(request, 'reservaciones/listar_reservaciones.html', {
+        'reservaciones': page_obj,  # Cambiamos a 'page_obj' para incluir solo los elementos de la página actual
+        'tipo_usuario': tipo_usuario,
+        'filtro': filtro,
+        'page_obj': page_obj,  # Objeto de paginación para la plantilla
+    })
 
 
 # Vista para agregar una nueva reservación de horas
