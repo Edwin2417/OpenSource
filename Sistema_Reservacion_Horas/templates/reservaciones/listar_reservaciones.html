@@ -77,6 +77,11 @@
             </tbody>
         </table>
     </div>
+
+         <div class="text-center mt-3">
+    <a href="{% url 'generar_pdf' %}?q={{ request.GET.q }}&filtro={{ request.GET.filtro }}" class="btn btn-success">Generar Reporte</a>
+</div>
+
     <!-- Controles de paginación -->
 <div class="d-flex justify-content-between align-items-center mt-3">
     <p>Mostrando {{ page_obj.start_index }} a {{ page_obj.end_index }} de {{ page_obj.paginator.count }} Reservaciones</p>
@@ -123,6 +128,7 @@
         </ul>
     </nav>
 </div>
+
 
     <script>
         // Mostrar el campo de fecha o texto según el filtro seleccionado

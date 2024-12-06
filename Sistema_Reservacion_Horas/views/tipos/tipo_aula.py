@@ -10,7 +10,7 @@ def admin_required(view_func):
     def wrapper(request, *args, **kwargs):
         tipo_usuario = request.session.get('tipo_usuario')
         if tipo_usuario != 'Administrador':
-            return HttpResponseForbidden("No tienes permiso para acceder a esta sección.")
+            return render(request, 'forbidden.html')  # Redirige a la plantilla
         return view_func(request, *args, **kwargs)
     return wrapper
 

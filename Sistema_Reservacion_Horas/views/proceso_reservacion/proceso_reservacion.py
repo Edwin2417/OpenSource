@@ -1,11 +1,13 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from Sistema_Reservacion_Horas.models.aulas_model import ProcesoReservacionHoras, Estado
 from Sistema_Reservacion_Horas.forms.proceso_reservacion_forms import ProcesoReservacionHorasForm
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, HttpResponse
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from Sistema_Reservacion_Horas.views.utils import paginar_objetos
 from django.db.models import Q
+from django.template.loader import render_to_string
+from xhtml2pdf import pisa
 from datetime import datetime
 
 # Decorador de permiso de administrador
@@ -13,11 +15,44 @@ def admin_required(view_func):
     def wrapper(request, *args, **kwargs):
         tipo_usuario = request.session.get('tipo_usuario')
         if tipo_usuario != 'Administrador':
-            return HttpResponseForbidden("No tienes permiso para acceder a esta sección.")
+            return render(request, 'forbidden.html')  # Redirige a la plantilla
         return view_func(request, *args, **kwargs)
     return wrapper
 
-@admin_required
+def generar_pdf(request):
+    filtro = request.GET.get('filtro', None)
+    query = request.GET.get('q', None)
+    encabezado = "Reporte de Reservaciones - GENERAL"  # Valor por defecto
+
+    # Filtrar reservaciones según el filtro y construir el encabezado
+    reservaciones = ProcesoReservacionHoras.objects.all()
+    if filtro == 'aula':
+        reservaciones = reservaciones.filter(aula__descripcion__icontains=query)
+        encabezado = f"Reporte de Reservaciones por Aula: {query}"
+    elif filtro == 'usuario':
+        reservaciones = reservaciones.filter(usuario__nombre__icontains=query)
+        encabezado = f"Reporte de Reservaciones por Usuario: {query}"
+    elif filtro == 'empleado':
+        reservaciones = reservaciones.filter(empleado__nombre__icontains=query)
+        encabezado = f"Reporte de Reservaciones por Empleado: {query}"
+    elif filtro == 'fecha':
+        reservaciones = reservaciones.filter(fecha_reservacion=query)
+        encabezado = f"Reporte de Reservaciones por Fecha: {query}"
+
+    # Renderizar HTML para el PDF
+    html = render_to_string('reservaciones/reporte_pdf.html', {
+        'reservaciones': reservaciones,
+        'encabezado': encabezado  # Pasamos el encabezado a la plantilla
+    })
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="reporte_reservaciones.pdf"'
+    pisa_status = pisa.CreatePDF(html, dest=response)
+
+    if pisa_status.err:
+        return HttpResponse("Error al generar PDF", status=500)
+    return response
+
+
 def listar_reservaciones(request):
     usuario_id = request.session.get('usuario_id')
     tipo_usuario = request.session.get('tipo_usuario')
